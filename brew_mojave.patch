@@ -1,0 +1,190 @@
+diff --git a/Formula/c/ca-certificates.rb b/Formula/c/ca-certificates.rb
+index f0b443c88a3..734438ca0d4 100644
+--- a/Formula/c/ca-certificates.rb
++++ b/Formula/c/ca-certificates.rb
+@@ -101,7 +101,7 @@ class CaCertificates < Formula
+     end
+ 
+     # Now process Mozilla certs we downloaded.
+-    pem_certs_list = File.read(pkgshare/"cacert.pem")
++    pem_certs_list = File.read(pkgetc/"cacert_latest.pem")
+     pem_certs = pem_certs_list.scan(
+       /-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----/m,
+     )
+diff --git a/Formula/c/cargo-c.rb b/Formula/c/cargo-c.rb
+index aa797338b2e..5464409461e 100644
+--- a/Formula/c/cargo-c.rb
++++ b/Formula/c/cargo-c.rb
+@@ -36,12 +36,23 @@ class CargoC < Formula
+   end
+ 
+   def install
+-    ENV["LIBGIT2_NO_VENDOR"] = "1"
++    ENV["LIBGIT2_NO_VENDOR"] = "0"
+     ENV["LIBSSH2_SYS_USE_PKG_CONFIG"] = "1"
+     # Ensure the correct `openssl` will be picked up.
+     ENV["OPENSSL_DIR"] = Formula["openssl@3"].opt_prefix
+     ENV["OPENSSL_NO_VENDOR"] = "1"
+ 
++    system "cargo", "update", "cargo-platform@0.1.9", "--precise", "0.1.4"
++    system "cargo", "update", "home@0.5.11", "--precise", "0.5.5"
++    system "cargo", "update", "cargo-credential-macos-keychain@0.4.12", "--precise", "0.4.0"
++    system "cargo", "update", "cargo-credential-libsecret@0.4.12", "--precise", "0.4.0"
++    system "cargo", "update", "cargo-credential-wincred@0.4.12", "--precise", "0.4.0"
++    system "cargo", "update", "cargo-credential@0.4.8", "--precise", "0.4.2"
++    system "cargo", "update", "base64ct@1.7.3", "--precise", "1.6.0"
++    system "cargo", "update", "litemap@0.7.5", "--precise", "0.7.3"
++    system "cargo", "update", "zerofrom@0.1.6", "--precise", "0.1.3"
++    system "cargo", "update", "orion@0.17.10", "--precise", "0.17.6"
++    system "cargo", "update", "cargo-util@0.2.19", "--precise", "0.2.7"
+     system "cargo", "install", *std_cargo_args
+   end
+ 
+diff --git a/Formula/g/gobject-introspection.rb b/Formula/g/gobject-introspection.rb
+index f187ed273e9..3e921640271 100644
+--- a/Formula/g/gobject-introspection.rb
++++ b/Formula/g/gobject-introspection.rb
+@@ -8,14 +8,12 @@ class GobjectIntrospection < Formula
+   license all_of: ["GPL-2.0-or-later", "LGPL-2.0-or-later", "MIT"]
+ 
+   bottle do
+-    rebuild 1
+-    sha256 arm64_sonoma:   "025018b9b268379c594d7a079ea585962a82610632f5fa7682347d7cdb031755"
+-    sha256 arm64_ventura:  "aeead3c8ba54d00e773d9140071a73c5736f5f20bc6c43b6483394da0e68eb98"
+-    sha256 arm64_monterey: "8d424f839195237aa9714ea4d5c10d79de2bd253a6b087a3e7f954f43d8b9f31"
+-    sha256 sonoma:         "f37f64f8ab0b15e72d0d026af7e0a1ef69bf26cd98d161c7a03db5ecd7ff13d8"
+-    sha256 ventura:        "e303113b7611e51e42ea3ea79675ec6cd9c4ad825c0273596bf1785a5a4af14e"
+-    sha256 monterey:       "b4f2b89603090bd8f9950b53ac5399c51ba1fde15cce6d4eb86ec79b91207e3c"
+-    sha256 x86_64_linux:   "236dac74f5dc88d7217ccabfdb17393ed6bb87ecc56ff5521ee55be41f574787"
++    rebuild 2
++    sha256 arm64_sonoma:   "0f98698570fde113ddf8134b93edf7e50a71530fdad4a345dea44307ad489254"
++    sha256 arm64_ventura:  "7d63768077cc24f658149b380daaf6c4d736b09dd3b8a7dc44ac1c94b0ff5472"
++    sha256 sonoma:         "893ed8eba9a90e94c95be128bb8acd9a81386204607e8bed4a53c290fb06fc32"
++    sha256 ventura:        "540635fb9a734b24b2f77740f1e7ca457b9b3644121ff9e938c61738be9827f3"
++    sha256 x86_64_linux:   "c34513885c5ac7c1df5e3f1f4ddb972194a572d19097980e6e67e4d8e8047319"
+   end
+ 
+   depends_on "bison" => :build
+@@ -36,7 +34,7 @@ class GobjectIntrospection < Formula
+   # See: https://github.com/Homebrew/homebrew-core/issues/75020
+   #      https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/273
+   patch do
+-    url "https://gitlab.gnome.org/tschoonj/gobject-introspection/-/commit/a7be304478b25271166cd92d110f251a8742d16b.diff"
++    url "https://gitlab.gnome.org/GNOME/gobject-introspection/-/commit/a7be304478b25271166cd92d110f251a8742d16b.diff"
+     sha256 "740c9fba499b1491689b0b1216f9e693e5cb35c9a8565df4314341122ce12f81"
+   end
+ 
+diff --git a/Formula/n/ninja.rb b/Formula/n/ninja.rb
+index cedd9765d47..c61968a89e5 100644
+--- a/Formula/n/ninja.rb
++++ b/Formula/n/ninja.rb
+@@ -34,7 +34,7 @@ class Ninja < Formula
+   end
+ 
+   def install
+-    system "python3", "configure.py", "--bootstrap", "--verbose", "--with-python=python3"
++    system "/usr/local/bin/python3", "configure.py", "--bootstrap", "--verbose", "--with-python=python3"
+ 
+     bin.install "ninja"
+     bash_completion.install "misc/bash-completion" => "ninja-completion.sh"
+diff --git a/Formula/s/snappy.rb b/Formula/s/snappy.rb
+index 00c3f05db37..5d1c28b9704 100644
+--- a/Formula/s/snappy.rb
++++ b/Formula/s/snappy.rb
+@@ -36,7 +36,7 @@ class Snappy < Formula
+   patch :DATA
+ 
+   def install
+-    ENV.llvm_clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1100)
++    #ENV.llvm_clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1100)
+ 
+     # Disable tests/benchmarks used for Snappy development
+     args = std_cmake_args + %w[
+diff --git a/Formula/s/sphinx-doc.rb b/Formula/s/sphinx-doc.rb
+index 64cd115c0c6..48a83f0087b 100644
+--- a/Formula/s/sphinx-doc.rb
++++ b/Formula/s/sphinx-doc.rb
+@@ -36,10 +36,10 @@ class SphinxDoc < Formula
+     sha256 "a27a4a084d5e690e16e01e03ad2b2e552c61a65469419b907243193de1a84ae2"
+   end
+ 
+-  resource "babel" do
+-    url "https://files.pythonhosted.org/packages/d5/7d/08e7b8b1ab446121ace3de332f144be41a52049a23303375a0126d515cb7/Babel-2.13.0.tar.gz"
+-    sha256 "04c3e2d28d2b7681644508f836be388ae49e0cfe91465095340395b60d00f210"
+-  end
++#  resource "babel" do
++#    url "https://files.pythonhosted.org/packages/d5/7d/08e7b8b1ab446121ace3de332f144be41a52049a23303375a0126d515cb7/Babel-2.13.0.tar.gz"
++#    sha256 "04c3e2d28d2b7681644508f836be388ae49e0cfe91465095340395b60d00f210"
++#  end
+ 
+   resource "charset-normalizer" do
+     url "https://files.pythonhosted.org/packages/cf/ac/e89b2f2f75f51e9859979b56d2ec162f7f893221975d244d8d5277aa9489/charset-normalizer-3.3.0.tar.gz"
+@@ -61,15 +61,15 @@ class SphinxDoc < Formula
+     sha256 "31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"
+   end
+ 
+-  resource "numpydoc" do
+-    url "https://files.pythonhosted.org/packages/5f/ed/5ca4b2e90f4b0781f5fac49cdb2947cf719b6d289eedb67e8b1a63d019e3/numpydoc-1.6.0.tar.gz"
+-    sha256 "ae7a5380f0a06373c3afe16ccd15bd79bc6b07f2704cbc6f1e7ecc94b4f5fc0d"
+-  end
++#  resource "numpydoc" do
++#    url "https://files.pythonhosted.org/packages/5f/ed/5ca4b2e90f4b0781f5fac49cdb2947cf719b6d289eedb67e8b1a63d019e3/numpydoc-1.6.0.tar.gz"
++#    sha256 "ae7a5380f0a06373c3afe16ccd15bd79bc6b07f2704cbc6f1e7ecc94b4f5fc0d"
++#  end
+ 
+-  resource "requests" do
+-    url "https://files.pythonhosted.org/packages/9d/be/10918a2eac4ae9f02f6cfe6414b7a155ccd8f7f9d4380d62fd5b955065c3/requests-2.31.0.tar.gz"
+-    sha256 "942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"
+-  end
++#  resource "requests" do
++#    url "https://files.pythonhosted.org/packages/9d/be/10918a2eac4ae9f02f6cfe6414b7a155ccd8f7f9d4380d62fd5b955065c3/requests-2.31.0.tar.gz"
++#    sha256 "942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"
++#  end
+ 
+   resource "snowballstemmer" do
+     url "https://files.pythonhosted.org/packages/44/7b/af302bebf22c749c56c9c3e8ae13190b5b5db37a33d9068652e8f73b7089/snowballstemmer-2.2.0.tar.gz"
+@@ -106,10 +106,10 @@ class SphinxDoc < Formula
+     sha256 "0c64ff898339e1fac29abd2bf5f11078f3ec413cfe9c046d3120d7ca65530b54"
+   end
+ 
+-  resource "urllib3" do
+-    url "https://files.pythonhosted.org/packages/af/47/b215df9f71b4fdba1025fc05a77db2ad243fa0926755a52c5e71659f4e3c/urllib3-2.0.7.tar.gz"
+-    sha256 "c97dfde1f7bd43a71c8d2a58e369e9b2bf692d1334ea9f9cae55add7d0dd0f84"
+-  end
++#  resource "urllib3" do
++#    url "https://files.pythonhosted.org/packages/af/47/b215df9f71b4fdba1025fc05a77db2ad243fa0926755a52c5e71659f4e3c/urllib3-2.0.7.tar.gz"
++#    sha256 "c97dfde1f7bd43a71c8d2a58e369e9b2bf692d1334ea9f9cae55add7d0dd0f84"
++#  end
+ 
+   def install
+     virtualenv_install_with_resources
+diff --git a/Formula/t/taglib.rb b/Formula/t/taglib.rb
+index e326a8fea8c..55483c32a1a 100644
+--- a/Formula/t/taglib.rb
++++ b/Formula/t/taglib.rb
+@@ -1,7 +1,7 @@
+ class Taglib < Formula
+   desc "Audio metadata library"
+   homepage "https://taglib.org/"
+-  url "https://taglib.github.io/releases/taglib-1.13.1.tar.gz"
++  url "https://github.com/taglib/taglib/releases/download/v1.13.1/taglib-1.13.1.tar.gz"
+   sha256 "c8da2b10f1bfec2cd7dbfcd33f4a2338db0765d851a50583d410bacf055cfd0b"
+   license "LGPL-2.1"
+   head "https://github.com/taglib/taglib.git", branch: "master"
+diff --git a/Formula/t/tesseract.rb b/Formula/t/tesseract.rb
+index 982660337ff..80385da2008 100644
+--- a/Formula/t/tesseract.rb
++++ b/Formula/t/tesseract.rb
+@@ -65,10 +65,10 @@ class Tesseract < Formula
+                           "--disable-dependency-tracking",
+                           "--datarootdir=#{HOMEBREW_PREFIX}/share"
+ 
+-    system "make", "training"
++    system "make"
+ 
+     # make install in the local share folder to avoid permission errors
+-    system "make", "install", "training-install", "datarootdir=#{share}"
++    system "make", "install", "datarootdir=#{share}"
+ 
+     resource("snum").stage { mv "snum.traineddata", share/"tessdata" }
+     resource("eng").stage { mv "eng.traineddata", share/"tessdata" }
